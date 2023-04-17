@@ -16,19 +16,12 @@ cssselect==1.1.0
 
 cytoolz==0.11.0
 
-datashape==0.5.4
-
 dicom==0.9.9.post1
-
-et-xmlfile==1.1.0
-excel2img==0.7
 
 fonttools==4.25.0
 
 gitdb==4.0.10
 GitPython==3.1.30
-
-jupyter==1.0.0
 
 lab==7.1
 
@@ -71,11 +64,6 @@ pytest==7.1.1
 pytz==2021.3
 pytz-deprecation-shim==0.1.0.post0
 
-PyYAML==6.0
-
-qtconsole==5.3.2
-QtPy==2.2.0
-queuelib==1.5.0
 
 rich==13.2.0
 
