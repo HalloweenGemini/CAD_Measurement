@@ -58,7 +58,13 @@ Ankle X-ray를 Upload 하십시오
 if dcm is not None : 
 
     ds = dcmread(dcm)
-    y_ratio, x_ratio = ds.ImagerPixelSpacing
+    
+    if ds.Modality == 'CT' :
+        y_ratio, x_ratio = ds.PixelSpacing
+    
+    else : 
+    
+        y_ratio, x_ratio = ds.ImagerPixelSpacing
 
     ds_array= ds.pixel_array
 
