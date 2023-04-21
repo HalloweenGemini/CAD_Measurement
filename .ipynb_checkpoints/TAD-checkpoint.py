@@ -18,7 +18,7 @@ if "points" not in st.session_state:
     
 def get_ellipse_coords(point, radius=3):
     center = point
-    radius = 3
+    radius = 1
     return (
         center[0] - radius,
         center[1] - radius,
