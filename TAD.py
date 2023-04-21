@@ -16,9 +16,9 @@ st.set_page_config(layout="wide")
 if "points" not in st.session_state:
     st.session_state["points"] = []
     
-def get_ellipse_coords(point, radius=10):
+def get_ellipse_coords(point, radius=3):
     center = point
-    radius = 10
+    radius = 3
     return (
         center[0] - radius,
         center[1] - radius,
@@ -50,9 +50,7 @@ def define_circle(p1, p2, p3):
 st.header('ACD Measurement')
 dcm = st.file_uploader("Ankle Lat X-ray",
                       help="""
-
 Ankle X-ray를 Upload 하십시오
-
 """)
 
 if dcm is not None : 
