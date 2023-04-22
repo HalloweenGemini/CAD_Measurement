@@ -11,10 +11,19 @@ import cv2
 
 import math
 
+radius10 = 2
+
 st.set_page_config(layout="wide")
+
+drawing_mode = st.sidebar.selectbox(
+    "Annotation tool:",
+    ("3-point circle", "Length", "Cobbs angle"),
+)
 
 if "points" not in st.session_state:
     st.session_state["points"] = []
+
+
     
 def get_ellipse_coords(point, radius=3):
     center = point
@@ -78,16 +87,19 @@ if dcm is not None :
 
 
     with Image.open("ds_array.jpg") as img:
-        draw = ImageDraw.Draw(img)
+        draw = ImageDraw.Draw(img) 
+               
 
         # Draw an ellipse at each coordinate in points
-        for point in st.session_state["points"]:
+        for point in st.session_state["points"][:6]:
+            
             coords = get_ellipse_coords(point)
-
             draw.ellipse(coords, fill="red")
 
             if len(st.session_state["points"]) > 2 and len(st.session_state["points"]) < 6 : 
-                radius10 = 10
+                for point in st.session_state["points"][3:]:
+                    coords = get_ellipse_coords(point)
+                    draw.ellipse(coords, fill="blue")
 
                 p1 = st.session_state["points"][0]
                 p2 = st.session_state["points"][1]
@@ -97,13 +109,16 @@ if dcm is not None :
                 draw.ellipse((c1[0]-radius10, c1[1]-radius10, c1[0]+radius10, c1[1]+radius10), outline = 'red')
                 draw.ellipse((c1[0]-radius1, c1[1]-radius1, c1[0]+radius1, c1[1]+radius1), outline = 'red')
 
-            elif len(st.session_state["points"]) > 5 : 
-                radius10 = 10
+            elif len(st.session_state["points"]) >= 6 : 
+                for point in st.session_state["points"][3:6]:
+                    coords = get_ellipse_coords(point)
+                    draw.ellipse(coords, fill="blue")
 
                 p1 = st.session_state["points"][0]
                 p2 = st.session_state["points"][1]
                 p3 = st.session_state["points"][2]
                 c1, radius1 = define_circle(p1,p2,p3)
+                # st.write(c1, radius1)
                 draw.ellipse((c1[0]-radius10, c1[1]-radius10, c1[0]+radius10, c1[1]+radius10), outline = 'red')
                 draw.ellipse((c1[0]-radius1, c1[1]-radius1, c1[0]+radius1, c1[1]+radius1), outline = 'red')
 
@@ -117,18 +132,32 @@ if dcm is not None :
 
                 dist = math.sqrt(((c1[0] - c2[0])*x_ratio)**2 + ((c1[1] - c2[1])*y_ratio)**2)
 
-                draw.line((c1[0],c1[1],c2[0],c2[1]), fill='green', width =10)
+                draw.line((c1[0],c1[1],c2[0],c2[1]), fill='green', width =5)
                 font = ImageFont.truetype("Gidole-Regular.ttf", size=50)
-                draw.text((c1[0],c1[1]), f"{dist:.2f}mm", font = font)
-
-
-
+                draw.text((c1[0],c1[1]+min(radius1,radius2)), f"{dist:.2f}mm", font = font)
+                
+        if st.sidebar.button("◀") :
+            st.session_state["points"]= st.session_state["points"][:-1]
+            st.experimental_rerun()
+        if st.sidebar.button("⟳") : 
+            st.session_state["points"]= []
+            st.experimental_rerun()
+                
         value = streamlit_image_coordinates(img, key="pil")
 
         if value is not None:
+            # st.write(f'{len(st.session_state["points"])}')
             point = value["x"], value["y"]  
-
-
             if point not in st.session_state["points"]:
+
+                st.write(point)
                 st.session_state["points"].append(point)
+                st.write(f'{(st.session_state["points"])}')
                 st.experimental_rerun()
+                
+        
+            # st.experimental_rerun()
+
+
+
+        
