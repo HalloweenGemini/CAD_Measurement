@@ -17,7 +17,10 @@ st.set_page_config(layout="wide")
 
 drawing_mode = st.sidebar.selectbox(
     "Annotation tool:",
-    ("3-point circle", "Length", "Cobbs angle"),
+    ("3-point circle", 
+     # "Length", 
+     # "Cobbs angle",
+    ),
 )
 
 if "points" not in st.session_state:
