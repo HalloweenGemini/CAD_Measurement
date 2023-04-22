@@ -20,8 +20,14 @@ drawing_mode = st.sidebar.selectbox(
     ("3-point circle", "Length", "Cobbs angle"),
 )
 
-if "points" not in st.session_state:
-    st.session_state["points"] = []
+if "points_3point" not in st.session_state:
+    st.session_state["points_3point"] = []
+    
+if "points_length" not in st.session_state:
+    st.session_state["points_length"] = []
+    
+if "points_cobbs" not in st.session_state:
+    st.session_state["points_cobbs"] = []
 
 
     
@@ -87,74 +93,95 @@ if dcm is not None :
 
 
     with Image.open("ds_array.jpg") as img:
-        draw = ImageDraw.Draw(img) 
-               
-
-        # Draw an ellipse at each coordinate in points
-        for point in st.session_state["points"][:6]:
-            
-            coords = get_ellipse_coords(point)
-            draw.ellipse(coords, fill="red")
-
-            if len(st.session_state["points"]) > 2 and len(st.session_state["points"]) < 6 : 
-                for point in st.session_state["points"][3:]:
-                    coords = get_ellipse_coords(point)
-                    draw.ellipse(coords, fill="blue")
-
-                p1 = st.session_state["points"][0]
-                p2 = st.session_state["points"][1]
-                p3 = st.session_state["points"][2]
-                c1, radius1 = define_circle(p1,p2,p3)
-
-                draw.ellipse((c1[0]-radius10, c1[1]-radius10, c1[0]+radius10, c1[1]+radius10), outline = 'red')
-                draw.ellipse((c1[0]-radius1, c1[1]-radius1, c1[0]+radius1, c1[1]+radius1), outline = 'red')
-
-            elif len(st.session_state["points"]) >= 6 : 
-                for point in st.session_state["points"][3:6]:
-                    coords = get_ellipse_coords(point)
-                    draw.ellipse(coords, fill="blue")
-
-                p1 = st.session_state["points"][0]
-                p2 = st.session_state["points"][1]
-                p3 = st.session_state["points"][2]
-                c1, radius1 = define_circle(p1,p2,p3)
-                # st.write(c1, radius1)
-                draw.ellipse((c1[0]-radius10, c1[1]-radius10, c1[0]+radius10, c1[1]+radius10), outline = 'red')
-                draw.ellipse((c1[0]-radius1, c1[1]-radius1, c1[0]+radius1, c1[1]+radius1), outline = 'red')
-
-                p4 = st.session_state["points"][3]
-                p5 = st.session_state["points"][4]
-                p6 = st.session_state["points"][5]
-                c2, radius2 = define_circle(p4,p5,p6)
-
-                draw.ellipse((c2[0]-radius10, c2[1]-radius10, c2[0]+radius10, c2[1]+radius10), outline = 'blue')
-                draw.ellipse((c2[0]-radius2, c2[1]-radius2, c2[0]+radius2, c2[1]+radius2), outline = 'blue')
-
-                dist = math.sqrt(((c1[0] - c2[0])*x_ratio)**2 + ((c1[1] - c2[1])*y_ratio)**2)
-
-                draw.line((c1[0],c1[1],c2[0],c2[1]), fill='green', width =5)
-                font = ImageFont.truetype("Gidole-Regular.ttf", size=50)
-                draw.text((c1[0],c1[1]+min(radius1,radius2)), f"{dist:.2f}mm", font = font)
+        
+        
+        if drawing_mode == 'length' : 
+            draw = ImageDraw.Draw(img) 
+            for point in st.session_state["points_length"]:
+                coords = get_ellipse_coords(point)
+                draw.ellipse(coords, fill="green")
                 
-        if st.sidebar.button("◀") :
-            st.session_state["points"]= st.session_state["points"][:-1]
-            st.experimental_rerun()
-        if st.sidebar.button("⟳") : 
-            st.session_state["points"]= []
-            st.experimental_rerun()
                 
-        value = streamlit_image_coordinates(img, key="pil")
-
-        if value is not None:
-            # st.write(f'{len(st.session_state["points"])}')
-            point = value["x"], value["y"]  
-            if point not in st.session_state["points"]:
-
-                st.write(point)
-                st.session_state["points"].append(point)
-                st.write(f'{(st.session_state["points"])}')
+            if st.sidebar.button("◀") :
+                st.session_state["points_3point"]= st.session_state["points_3point"][:-1]
+                st.experimental_rerun()
+            if st.sidebar.button("⟳") : 
+                st.session_state["points_3point"]= []
                 st.experimental_rerun()
                 
+                
+            value = streamlit_image_coordinates(img, key="pil")
+            if value is not None:
+                # st.write(f'{len(st.session_state["points"])}')
+                point = value["x"], value["y"]  
+                if point not in st.session_state["points_length"]:
+                    st.session_state["points_length"].append(point)
+                    st.experimental_rerun()
+        
+        elif drawing_mode == '3-point circle' : 
+            draw = ImageDraw.Draw(img) 
+
+            # Draw an ellipse at each coordinate in points
+            for point in st.session_state["points_3point"][:6]:
+
+                coords = get_ellipse_coords(point)
+                draw.ellipse(coords, fill="red")
+
+                if len(st.session_state["points_3point"]) > 2 and len(st.session_state["points_3point"]) < 6 : 
+                    for point in st.session_state["points_3point"][3:]:
+                        coords = get_ellipse_coords(point)
+                        draw.ellipse(coords, fill="blue")
+
+                    p1 = st.session_state["points_3point"][0]
+                    p2 = st.session_state["points_3point"][1]
+                    p3 = st.session_state["points_3point"][2]
+                    c1, radius1 = define_circle(p1,p2,p3)
+
+                    draw.ellipse((c1[0]-radius10, c1[1]-radius10, c1[0]+radius10, c1[1]+radius10), outline = 'red')
+                    draw.ellipse((c1[0]-radius1, c1[1]-radius1, c1[0]+radius1, c1[1]+radius1), outline = 'red')
+
+                elif len(st.session_state["points_3point"]) >= 6 : 
+                    for point in st.session_state["points_3point"][3:6]:
+                        coords = get_ellipse_coords(point)
+                        draw.ellipse(coords, fill="blue")
+
+                    p1 = st.session_state["points_3point"][0]
+                    p2 = st.session_state["points_3point"][1]
+                    p3 = st.session_state["points_3point"][2]
+                    c1, radius1 = define_circle(p1,p2,p3)
+                    # st.write(c1, radius1)
+                    draw.ellipse((c1[0]-radius10, c1[1]-radius10, c1[0]+radius10, c1[1]+radius10), outline = 'red')
+                    draw.ellipse((c1[0]-radius1, c1[1]-radius1, c1[0]+radius1, c1[1]+radius1), outline = 'red')
+
+                    p4 = st.session_state["points_3point"][3]
+                    p5 = st.session_state["points_3point"][4]
+                    p6 = st.session_state["points_3point"][5]
+                    c2, radius2 = define_circle(p4,p5,p6)
+
+                    draw.ellipse((c2[0]-radius10, c2[1]-radius10, c2[0]+radius10, c2[1]+radius10), outline = 'blue')
+                    draw.ellipse((c2[0]-radius2, c2[1]-radius2, c2[0]+radius2, c2[1]+radius2), outline = 'blue')
+
+                    dist = math.sqrt(((c1[0] - c2[0])*x_ratio)**2 + ((c1[1] - c2[1])*y_ratio)**2)
+
+                    draw.line((c1[0],c1[1],c2[0],c2[1]), fill='green', width =5)
+                    font = ImageFont.truetype("Gidole-Regular.ttf", size=50)
+                    draw.text((c1[0],c1[1]+min(radius1,radius2)), f"{dist:.2f}mm", font = font)
+
+            if st.sidebar.button("◀") :
+                st.session_state["points_3point"]= st.session_state["points_3point"][:-1]
+                st.experimental_rerun()
+            if st.sidebar.button("⟳") : 
+                st.session_state["points_3point"]= []
+                st.experimental_rerun()
+
+            value = streamlit_image_coordinates(img, key="pil")
+            if value is not None:
+                # st.write(f'{len(st.session_state["points"])}')
+                point = value["x"], value["y"]  
+                if point not in st.session_state["points_3point"]:
+                    st.session_state["points_3point"].append(point)
+                    st.experimental_rerun()
+
         
             # st.experimental_rerun()
 

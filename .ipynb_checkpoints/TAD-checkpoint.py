@@ -56,8 +56,9 @@ def define_circle(p1, p2, p3):
     radius = np.sqrt((cx - p1[0])**2 + (cy - p1[1])**2)
     return ((cx, cy), radius)
 
-st.header('ACD Measurement')
-dcm = st.file_uploader("Ankle Lat X-ray",
+
+st.header('Hinge joint sagittal plane view')
+dcm = st.file_uploader("X-ray, CT Dicom",
                       help="""
 Ankle X-ray를 Upload 하십시오
 """)
