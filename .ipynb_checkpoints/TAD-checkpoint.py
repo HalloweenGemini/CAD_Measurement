@@ -137,7 +137,7 @@ if dcm is not None :
                 dist = math.sqrt(((c1[0] - c2[0])*x_ratio)**2 + ((c1[1] - c2[1])*y_ratio)**2)
 
                 draw.line((c1[0],c1[1],c2[0],c2[1]), fill='green', width =5)
-                font = ImageFont.truetype("Gidole-Regular.ttf", size=50)
+                font = ImageFont.truetype("Gidole-Regular.ttf", size=25)
                 draw.text((c1[0],c1[1]+min(radius1,radius2)), f"{dist:.2f}mm", font = font)
                 
         if st.sidebar.button("◀") :
