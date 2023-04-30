@@ -3,7 +3,7 @@ import pydicom
 from pydicom import dcmread
 from pydicom.data import get_testdata_file
 from pydicom.pixel_data_handlers.util import apply_voi_lut
-from streamlit_modal import Modal
+# from streamlit_modal import Modal
 import streamlit.components.v1 as components
 
 import streamlit as st
@@ -38,8 +38,6 @@ dcm = st.file_uploader("X-ray, CT Dicom",
                       help="""
 Ankle X-ray를 Upload 하십시오
 """)
-
-modal = Modal("Demo Modal", key="demo")
 
 def read_dicom(dcm): 
     ds = dcmread(dcm)

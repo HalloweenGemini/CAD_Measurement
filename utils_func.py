@@ -3,7 +3,6 @@ import os
 from pydicom import dcmread
 from pydicom.data import get_testdata_file
 from pydicom.pixel_data_handlers.util import apply_voi_lut
-from streamlit_modal import Modal
 import streamlit as st
 import math
 
