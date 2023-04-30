@@ -3,7 +3,7 @@ import pydicom
 from pydicom import dcmread
 from pydicom.data import get_testdata_file
 from pydicom.pixel_data_handlers.util import apply_voi_lut
-from streamlit_modal import Modal
+# from streamlit_modal import Modal
 import streamlit.components.v1 as components
 
 import streamlit as st
@@ -39,8 +39,6 @@ dcm = st.file_uploader("X-ray, CT Dicom",
 Ankle X-ray를 Upload 하십시오
 """)
 
-modal = Modal("Demo Modal", key="demo")
-
 def read_dicom(dcm): 
     ds = dcmread(dcm)
     ds_array= ds.pixel_array
@@ -67,6 +65,8 @@ if dcm is not None :
     ds_array, y_ratio, x_ratio, open_modal = read_dicom(dcm)
     st.sidebar.number_input("X axis mm/pixel 비율", value = x_ratio)
     st.sidebar.number_input("Y axis mm/pixel 비율", value = y_ratio)
+    
+    H, W, _ = ds_array.shape
     
     if open_modal == True : 
         st.write("dicom file 에 mm/pixel 비율이 파악되지 않아 확인필요합니다, default = 0.145, 0.145로 반영합니다. sidebar를 확인해주세요")
@@ -223,10 +223,10 @@ if dcm is not None :
 #                 st.experimental_rerun()
                 
                 
-            value = streamlit_image_coordinates(img, key="pil")
+            value = streamlit_image_coordinates(img, width =700, key="pil")
             if value is not None:
                 # st.write(f'{len(st.session_state["points"])}')
-                point = value["x"], value["y"]  
+                point = value["x"] * (W/700) , value["y"] * (W/700)
                 if point not in st.session_state["points_length"]:
                     st.session_state["points_length"].append(point)
                     st.experimental_rerun() 
@@ -256,7 +256,7 @@ if dcm is not None :
                     draw.ellipse((c1[0]-radius10, c1[1]-radius10, c1[0]+radius10, c1[1]+radius10), outline = 'pink')
                     draw.ellipse((c1[0]-radius1, c1[1]-radius1, c1[0]+radius1, c1[1]+radius1), outline = 'pink')
 
-                elif len(st.session_state["points_2point"]) == 5 : 
+                elif len(st.session_state["points_2point"]) >= 5 : 
                     for point in st.session_state["points_2point"][3:]:
                         coords = get_ellipse_coords(point)
                         draw.ellipse(coords, fill="purple")
@@ -301,10 +301,10 @@ if dcm is not None :
     #                 st.experimental_rerun()
                 
                 
-            value = streamlit_image_coordinates(img, key="pil")
+            value = streamlit_image_coordinates(img, width =700, key="pil")
             if value is not None:
                 # st.write(f'{len(st.session_state["points"])}')
-                point = value["x"], value["y"]  
+                point = value["x"] * (W/700) , value["y"] * (W/700) 
                 if point not in st.session_state["points_2point"]:
                     st.session_state["points_2point"].append(point)
                     st.experimental_rerun() 
@@ -367,10 +367,10 @@ if dcm is not None :
 #                     st.experimental_rerun() 
         
 
-        value = streamlit_image_coordinates(img, key="pil2")
+        value = streamlit_image_coordinates(img, width =700, key="pil2")
         if value is not None:
             # st.write(f'{len(st.session_state["points"])}')
-            point = value["x"], value["y"]  
+            point = value["x"] * (W/700) , value["y"] * (W/700)
             if point not in st.session_state["points_3point"]:
                 st.session_state["points_3point"].append(point)
                 st.experimental_rerun()

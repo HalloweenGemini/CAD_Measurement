@@ -66,6 +66,8 @@ if dcm is not None :
     st.sidebar.number_input("X axis mm/pixel 비율", value = x_ratio)
     st.sidebar.number_input("Y axis mm/pixel 비율", value = y_ratio)
     
+    H, W, _ = ds_array.shape
+    
     if open_modal == True : 
         st.write("dicom file 에 mm/pixel 비율이 파악되지 않아 확인필요합니다, default = 0.145, 0.145로 반영합니다. sidebar를 확인해주세요")
         txt = st.sidebar.text_area('해당 data에서 비율 data에 대한 검토가 필요합니다', value = f'{dcmread(dcm, force=True)}',max_chars = None)
@@ -221,10 +223,10 @@ if dcm is not None :
 #                 st.experimental_rerun()
                 
                 
-            value = streamlit_image_coordinates(img, key="pil")
+            value = streamlit_image_coordinates(img, width =700, key="pil")
             if value is not None:
                 # st.write(f'{len(st.session_state["points"])}')
-                point = value["x"], value["y"]  
+                point = value["x"] * (W/700) , value["y"] * (W/700)
                 if point not in st.session_state["points_length"]:
                     st.session_state["points_length"].append(point)
                     st.experimental_rerun() 
@@ -299,10 +301,10 @@ if dcm is not None :
     #                 st.experimental_rerun()
                 
                 
-            value = streamlit_image_coordinates(img, key="pil")
+            value = streamlit_image_coordinates(img, width =700, key="pil")
             if value is not None:
                 # st.write(f'{len(st.session_state["points"])}')
-                point = value["x"], value["y"]  
+                point = value["x"] * (W/700) , value["y"] * (W/700) 
                 if point not in st.session_state["points_2point"]:
                     st.session_state["points_2point"].append(point)
                     st.experimental_rerun() 
@@ -365,10 +367,10 @@ if dcm is not None :
 #                     st.experimental_rerun() 
         
 
-        value = streamlit_image_coordinates(img, key="pil2")
+        value = streamlit_image_coordinates(img, width =700, key="pil2")
         if value is not None:
             # st.write(f'{len(st.session_state["points"])}')
-            point = value["x"], value["y"]  
+            point = value["x"] * (W/700) , value["y"] * (W/700)
             if point not in st.session_state["points_3point"]:
                 st.session_state["points_3point"].append(point)
                 st.experimental_rerun()
