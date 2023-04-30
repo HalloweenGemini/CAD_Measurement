@@ -254,7 +254,7 @@ if dcm is not None :
                     draw.ellipse((c1[0]-radius10, c1[1]-radius10, c1[0]+radius10, c1[1]+radius10), outline = 'pink')
                     draw.ellipse((c1[0]-radius1, c1[1]-radius1, c1[0]+radius1, c1[1]+radius1), outline = 'pink')
 
-                elif len(st.session_state["points_2point"]) == 5 : 
+                elif len(st.session_state["points_2point"]) >= 5 : 
                     for point in st.session_state["points_2point"][3:]:
                         coords = get_ellipse_coords(point)
                         draw.ellipse(coords, fill="purple")
