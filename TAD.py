@@ -185,7 +185,7 @@ if dcm is not None :
 
                 draw.line((c1[0],c1[1],c2[0],c2[1]), fill='green', width =5)
                 font = ImageFont.truetype("Gidole-Regular.ttf", size=25)
-                draw.text((c1[0],c1[1]+min(radius1,radius2)), f"{dist:.2f}mm", font = font)
+                draw.text((c1[0],c1[1]+max(radius1,radius2)), f"{dist:.2f}mm", font = font)
                 
 
         if getback :
@@ -289,7 +289,7 @@ if dcm is not None :
 
                     draw.line((c1[0],c1[1],c2[0],c2[1]), fill='green', width =5)
                     font = ImageFont.truetype("Gidole-Regular.ttf", size=25)
-                    draw.text((c1[0],c1[1]+min(radius_2point,radius_2point)), f"{dist:.2f}mm", font = font)   
+                    draw.text((c1[0],c1[1]+max(radius_2point,radius_2point)), f"{dist:.2f}mm", font = font)   
 
 
 
